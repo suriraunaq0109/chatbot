@@ -1,5 +1,6 @@
-
-
+import pandas as pd
+import numpy as np
+import random
 import pandas as pd
 import pyttsx3
 from sklearn import preprocessing
@@ -12,6 +13,7 @@ import csv
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
+#Cleaning and Preprocessing
 
 training = pd.read_csv('Training.csv')
 testing= pd.read_csv('Testing.csv')
@@ -47,13 +49,14 @@ print (scores.mean())
 
 model=SVC()
 model.fit(x_train,y_train)
-print("for svm: ")
+#print("for svm: ")
 print(model.score(x_test,y_test))
 
 importances = clf.feature_importances_
 indices = np.argsort(importances)[::-1]
 features = cols
 
+"""
 def readn(nstr):
     engine = pyttsx3.init()
 
@@ -64,6 +67,7 @@ def readn(nstr):
     engine.runAndWait()
     engine.stop()
 
+"""
 
 severityDictionary=dict()
 description_list = dict()
@@ -73,6 +77,7 @@ symptoms_dict = {}
 
 for index, symptom in enumerate(x):
        symptoms_dict[symptom] = index
+
 def calc_condition(exp,days):
     sum=0
     for item in exp:
@@ -122,7 +127,7 @@ def getprecautionDict():
 
 def getInfo():
     # name=input("Name:")
-    print("Your Name \n\t\t\t\t\t\t",end="->")
+    print("Your Name \t\t\t\t\t\t",end="->")
     name=input("")
     print("hello ",name)
 
@@ -142,6 +147,7 @@ def check_pattern(dis_list,inp):
         return 1,pred_list
     else:
         return ptr,item
+
 def sec_predict(symptoms_exp):
     df = pd.read_csv('Training.csv')
     X = df.iloc[:, :-1]
@@ -172,6 +178,10 @@ def print_disease(node):
     disease = le.inverse_transform(val[0])
     return disease
 def tree_to_code(tree, feature_names):
+    print("Your Name \t\t\t\t\t\t",end="->")
+    name=input("")
+    print("hello ",name)
+
     tree_ = tree.tree_
     # print(tree_)
     feature_name = [
@@ -186,7 +196,7 @@ def tree_to_code(tree, feature_names):
     # conf_inp=int()
     while True:
 
-        print("Enter the symptom you are experiencing  \n\t\t\t\t\t\t",end="->")
+        print("Enter the symptom you are experiencing ",end="->")
         disease_input = input("")
         conf,cnf_dis=check_pattern(chk_dis,disease_input)
         if conf==1:
@@ -273,14 +283,22 @@ def tree_to_code(tree, feature_names):
             print("Take following measures : ")
             for  i,j in enumerate(precution_list):
                 print(i+1,")",j)
+            
+            data = pd.read_csv('doctors_dataset.csv') 
+            data.columns = ['Doctor', 'Link']
+            df = data.sample()
+            #doc = random.choice((data['Doctor'].values))
+            #lk = random.choice((data['Link'].values))
+            print("You should consult: ", df)
 
-            # confidence_level = (1.0*len(symptoms_present))/len(symptoms_given)
-            # print("confidence level is " + str(confidence_level))
+     
+            confidence_level = (1.0*len(symptoms_present))/len(symptoms_given)
+            print("confidence level is " + str(confidence_level))
 
     recurse(0, 1)
 getSeverityDict()
 getDescription()
 getprecautionDict()
-getInfo()
+#getInfo()
 tree_to_code(clf,cols)
 
